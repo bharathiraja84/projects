@@ -1,0 +1,18 @@
+name: AATC AI-VPE checks
+on:
+  pull_request:
+    paths: ['aatc-ai-vpe/**', '.github/workflows/aatc-ci.yml']
+  push:
+    paths: ['aatc-ai-vpe/**', '.github/workflows/aatc-ci.yml']
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: aatc-ai-vpe
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm run check

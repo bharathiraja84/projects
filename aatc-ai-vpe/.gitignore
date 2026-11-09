@@ -1,0 +1,17 @@
+node_modules/
+.env
+.env.*
+!.env.example
+.clasp.json
+.clasprc.json
+credentials.json
+token.json
+coverage/
+dist/
+build/
+*.log
+.DS_Store
+tmp/
+private/
+data/live/
+assets/member-photos/

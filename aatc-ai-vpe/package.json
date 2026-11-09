@@ -1,0 +1,13 @@
+{
+  "name": "aatc-ai-vpe",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "AATC AI-VPE validation-first Apps Script scaffold",
+  "scripts": {
+    "test": "node --test",
+    "lint": "node --check src/domain/assignment.mjs && node --check src/domain/scheduler.mjs && node --check scripts/check-scaffold.mjs",
+    "check": "npm run lint && npm test && node scripts/check-scaffold.mjs"
+  },
+  "devDependencies": {}
+}
