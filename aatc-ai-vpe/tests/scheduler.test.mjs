@@ -1,0 +1,10 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { isEligible } from "../src/domain/scheduler.mjs";
+const member = { id:"M1", status:"ACTIVE", maxRolesPerMeeting:1, excludedRoles:[], speechReady:true };
+const role = { id:"TIM" };
+const base = { member, role, meetingId:"MTG1", availability:"AVAILABLE" };
+test("available active eligible member qualifies", () => assert.equal(isEligible(base), true));
+test("unavailable member excluded", () => assert.equal(isEligible({...base, availability:"UNAVAILABLE"}), false));
+test("already assigned member excluded", () => assert.equal(isEligible({...base, currentAssignments:[{memberId:"M1",meetingId:"MTG1",status:"CONFIRMED"}]}), false));
+test("speaker without readiness excluded", () => assert.equal(isEligible({...base, member:{...member,speechReady:false}, role:{id:"SPK",requiresSpeechReady:true}}), false));
