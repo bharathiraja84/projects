@@ -41,3 +41,6 @@ One shared portal, VPE first; maximize free tiers but never compromise identity,
 
 ## Codex handoff
 Read AGENTS.md, this roadmap, docs/SRS.md, docs/TMI_COMPLIANCE.md and docs/TEST_STRATEGY.md. Implement only the first unblocked phase. Finish with tests, traceability, documentation, and PR; don't activate real notifications.
+
+## Internal-only scope clarification (2026-11-10)
+AATC portal is a **members-only authenticated operational portal**, not a public website. Separate TMI approval is not a prerequisite to build or privately test a prototype. Replace public-site launch/Brand Team approval as the immediate Stage 1 blocker with ExCom ownership, authorization, privacy and role access. Before branded production use, check applicable TMI rules; if a public website is later added, reassess all website requirements. Initial pilot uses text-first identity and dummy data. This decision supersedes earlier statements suggesting external approval is always mandatory.

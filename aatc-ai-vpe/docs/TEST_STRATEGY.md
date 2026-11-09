@@ -82,3 +82,11 @@ UNIT synthetic data only; INTEGRATION fake member accounts and isolated Google/h
 
 ## Evidence template
 Test ID; requirement; case description; environment; build/commit; fixture; expected; actual; result; owner; timestamp; defect/approval reference. Attach sanitized screenshots only.
+
+## Scope-specific test applicability (2026-11-10)
+- TEST PRIV-001: anonymous request for any route/API returns no member records, and redirects/denies as appropriate.
+- TEST PRIV-002: authenticated member denied other members' private data; ExCom scopes enforced server-side.
+- TEST PRIV-003: public search crawler/unauthenticated request cannot obtain any private content; robots.txt is **not** treated as a security boundary.
+- TEST GOV-001: AATC ExCom authorizes internal deployment; independent TMI signoff is not a pilot prerequisite.
+- TC-036/TC-037 (website disclaimer/public club details) are conditional: mark N/A only when product is truly members-only and compliance reviewer confirms they do not apply to the implemented service. Reopen if public-facing website is added.
+- Official TMI marks/copyright/privacy constraints remain applicable; do not skip TC-034/TC-035 if marks are used.

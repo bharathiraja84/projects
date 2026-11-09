@@ -33,3 +33,6 @@ Toastmasters International® owns Toastmasters trademarks and copyrights, includ
 4. Does the proposed publicly accessible Wall of Fame require additional model/photo rights or club approvals?
 5. Must any link to official TMI member portal require specific disclaimer/permission?
 6. Any region/district club-site expectations for identity/administrators?
+
+## Clarification — members-only AATC portal (2026-11-10)
+The project will **not be public-facing**. It is an authenticated, club-owned internal application with scoped ExCom permissions. Current official documents provide requirements for club websites and use of TMI marks, but do not explicitly state that every private internal portal needs prior separate TMI approval; they also do not provide an automatic exemption. Therefore: **no separate TMI approval as a mandatory prerequisite to build and privately pilot**. Retain ExCom authorization, privacy/IP and applicable brand safeguards; use no official logo for the initial text-only prototype. Website footer/public-information tests become conditional on classification/publication, and must be reassessed when adding public pages or ambiguous trademark use. Earlier stronger statements in this document are superseded by this clarification.

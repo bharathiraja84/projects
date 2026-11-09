@@ -29,3 +29,6 @@ flowchart TD
 8. Runtime configuration and API keys are server-side. Instrument quotas and cost caps. Backups + manual fallback are mandatory.
 9. Detect job failures, perform bounded tested retries and reconcile ambiguous sends. Feature/code repair creates draft PR for human review; never auto-deploy.
 10. Privacy: explicit consent, narrow purpose, data minimization, configurable retention, access requests/deletion workflow and approved photos/award visibility.
+
+## Initial deployment classification (2026-11-10)
+Private, member-authenticated portal only; no anonymous landing page, public member directory or open registration. All data APIs must authorize server-side and apply least-privilege ExCom access. Public club website modules are deferred. Do not require external TMI approval for a private prototype, but review relevant TMI copyright/mark conditions before branded rollout. Use text-first identity initially.

@@ -18,3 +18,6 @@ ONE club-owned responsive portal. RBAC for authenticated MEMBER and EXCOM plus d
 
 ## Engineering workflow
 Small branch/PR per feature. Link SRS IDs to tests in docs/TRACEABILITY.md. Run npm run check and security/privacy checks before claiming complete. Keep adapters isolated, domain logic deterministic, with timestamps and idempotency/locking. Update DEVELOPMENT_PLAN.md after each session. Avoid modifying unrelated repository files.
+
+## Internal portal rule (2026-11-10)
+This product is for verified AATC members only, with role-scoped ExCom views. Do not introduce public pages or open signup without scope change and compliance review. Separate TMI approval is not a prerequisite for private prototype coding; internal club authorization, privacy safeguards, and applicable TMI IP/brand rules remain. Use text-only name in prototype instead of creating TMI logos.
