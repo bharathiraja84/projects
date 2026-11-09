@@ -1,64 +1,107 @@
-# Software Requirements Specification — AATC AI-VPE
-Version 1.0 draft; status: NOT APPROVED. Scope: weekly club scheduling/confirmation (Sunday 10:00–12:00 IST). The formal 13-page SRS discussed in the project planning conversation should be reviewed against this developer-oriented baseline; do not claim this Markdown is a verbatim conversion.
+# Software Requirements Specification — AATC AI Club Portal (v1.1 draft)
+**Status:** NOT APPROVED; updated 2026-11-10. Scope: one club-owned portal with VPE scheduling/confirmation FIRST. Future ExCom roles, knowledge chatbot, official one-to-one WhatsApp and self-healing are controlled later phases. Prior 30 FR + 16 NFR VPE baseline is retained by reference below, with expanded requirements.
 
-## Actors
-MEMBER, VPE, AUTHORIZED_OFFICER (e.g. President/TMOD when delegated), AUTOMATION, AI_ADVISOR.
-## Functional requirements
-| ID | Requirement / verifiable acceptance criterion |
-|---|---|
-| FR-001 | Maintain unique active member ID, verified email, status, role preferences and consent; reject duplicates. |
-| FR-002 | Maintain configurable role definitions, slots, eligibility, exclusions and role incompatibilities. |
-| FR-003 | Generate a four-week club-local meeting calendar; support holidays, special meetings and cancellations. |
-| FR-004 | Record each member's per-meeting availability as AVAILABLE, MAYBE, UNAVAILABLE or UNKNOWN. |
-| FR-005 | Only available, active, eligible, nonconflicting members qualify for automatic proposals. |
-| FR-006 | Prepared speech proposals require recorded speech readiness. |
-| FR-007 | Respect maximum roles per member per meeting, configured by the club. |
-| FR-008 | Score eligible candidates with configurable fairness, education and preference weights. |
-| FR-009 | Find a conflict-free set of proposals; leave unfillable slots vacant with explanation. |
-| FR-010 | Require VPE/authorized-officer approval before sending initial invitations. |
-| FR-011 | Create unique immutable assignment IDs and one active ownership record per slot. |
-| FR-012 | Send invitations via authorized outbox; store due date and provider send-attempt outcome. |
-| FR-013 | Collect explicit accept/decline/cancel choices through identity-verified responses. |
-| FR-014 | Confirm only when invite active, unexpired, member matches, and no conflicting assignment. |
-| FR-015 | Reject stale, forged, ineligible and unauthorized decisions without changing the schedule. |
-| FR-016 | Handle duplicate identical submissions idempotently. |
-| FR-017 | Execute only allowed state transitions with event audit and optimistic version checks. |
-| FR-018 | Send no more than one instance of each scheduled reminder event; honor opt-out rules. |
-| FR-019 | Expire unanswered invitations after configured cutoff; report exception. |
-| FR-020 | Suggest alternates on decline, expiry or cancellation without auto-confirming them. |
-| FR-021 | Protect confirmed assignments; cancellation or authorized, audited override required to replace. |
-| FR-022 | Queue officer digest for vacancies, cancellations, missing confirmations, and delivery failures. |
-| FR-023 | Produce agenda only from validated active assignments; publication requires officer approval. |
-| FR-024 | Permit pause/resume of outbound workflows without losing pending work. |
-| FR-025 | Record roles actually performed separately from planned assignments. |
-| FR-026 | Compute participation coverage, fairness, response-time and manual-intervention metrics. |
-| FR-027 | Expose member-accessible correction path and officer-controlled record amendments. |
-| FR-028 | Back up, reconcile and restore operational data with documented verification. |
-| FR-029 | Produce AI recommendations and drafted text only, with output schema validation. |
-| FR-030 | Continue deterministic scheduling and confirmation when AI service is unavailable. |
+## Stakeholders and actors
+Club President (portal owner/governance); VPE (schedule controller); ExCom officer (scoped club operations); Member (self-service); delegated admin (technical, non-content); guest/public (approved club information); AUTOMATION (deterministic); AI_ADVISOR (read-only).
+
+## Priority rules
+P0 = mandatory before pilot/public release; P1 = before first member portal release; P2 = deferred with change approval. Tested against acceptance criteria below.
+
+## A. Shared portal and authorization
+| ID | Priority | Requirement and acceptance criterion |
+|---|---|---|
+| PORT-001 | P0 | ONE club-owned portal with independently deployable modules; current VPE functions are the first module. No independent officer-created club site. |
+| PORT-002 | P0 | Role-aware navigation: GUEST, MEMBER, VPE, VPM, VPPR, SECRETARY, TREASURER, PRESIDENT, TECH_ADMIN; least-privilege server-side scopes. |
+| PORT-003 | P0 | Default-deny access to membership, attendance, speeches, profiles, dashboards, audit and documents unless authorized; test direct URL/API access. |
+| PORT-004 | P0 | Verified authentication, active member mapping, officer-term start/end and prompt revocation; no reliance on hidden UI controls. |
+| PORT-005 | P1 | Members view/edit own availability, preferences, role acceptance, privacy choices and permitted education summary; no other member's private records. |
+| PORT-006 | P1 | ExCom membership dashboard shows verified counts/status and attendance statistics only within approved authorization; source and as-of date displayed. |
+| PORT-007 | P1 | Approved public/member events, weekly awards, contest wins, Wall of Fame published only after officer moderation and applicable participant consent. |
+| PORT-008 | P1 | Responsive mobile-first portal with keyboard access, readable color contrast and simple workflows for voluntary members. |
+| PORT-009 | P0 | Clear distinction between local club data and official TMI Club Central/Base Camp records; no claims of official integration absent authorized API. |
+| PORT-010 | P0 | App remains operable without model or WhatsApp subscriptions; toggles disable nonessential paid integrations. |
+
+## B. VPE scheduling and member accountability (previous baseline strengthened)
+| ID | Priority | Requirement and acceptance criterion |
+|---|---|---|
+| FR-001 | P0 | Maintain unique active member ID, verified email, status, role preferences and consent; reject duplicates. |
+| FR-002 | P0 | Configurable role definitions, slot counts, eligibility, exclusions, role incompatibilities. |
+| FR-003 | P0 | Generate four-week club-local meeting calendar, including exceptions/special meetings. |
+| FR-004 | P0 | Accept per-meeting AVAILABLE/MAYBE/UNAVAILABLE/UNKNOWN with timestamped provenance. |
+| FR-005 | P0 | Invite only AVAILABLE, active, eligible, nonconflicting members under automatic policy; MAYBE needs review. |
+| FR-006 | P0 | Speech slot proposal requires recorded readiness/intent. |
+| FR-007 | P0 | Respect per-meeting maximum roles and mutual exclusions. |
+| FR-008 | P0 | Configurable, explainable participation fairness + education/preference scores; no punitive automatic ranking. |
+| FR-009 | P0 | Propose conflict-free assignments, leave impossible slots vacant with explanation. |
+| FR-010 | P0 | VPE or delegated officer approves invitations before first send. |
+| FR-011 | P0 | Immutable assignment IDs, versions and one active owner per role slot. |
+| FR-012 | P0 | Queue emails with deadline, delivery attempt status and idempotency. |
+| FR-013 | P0 | Member explicitly accepts/declines/cancels using verified identity; do not infer consent from silence. |
+| FR-014 | P0 | Accept only active unexpired invitation belonging to member; verify conflict-free state. |
+| FR-015 | P0 | Stale, forged, duplicate-authority and unauthorized decisions do not alter schedule. |
+| FR-016 | P0 | Duplicate identical submits are idempotent; retry-safe. |
+| FR-017 | P0 | Validated assignment state changes, expected version, actor and audit record. |
+| FR-018 | P0 | Reminders scheduled by rule with deduplication and messaging preferences; no harassment/spam. |
+| FR-019 | P0 | Nonresponse expires only after configured time; exception sent to VPE/TMOD. |
+| FR-020 | P0 | Decline, expiry or cancellation suggests alternatives but never auto-confirms another member. |
+| FR-021 | P0 | Confirmed assignment protected from unapproved changes; cancellation/authorized override audited. |
+| FR-022 | P0 | Private officer digest for vacancies and failed communication; member privacy respected. |
+| FR-023 | P0 | Agenda only from verified active state; officer approval before publication. |
+| FR-024 | P0 | Authorized kill switch pauses notifications and preserves work queue. |
+| FR-025 | P1 | Record ACTUAL participation separately from assigned/planned. |
+| FR-026 | P1 | Private aggregate participation/response/fairness statistics with method and date. |
+| FR-027 | P0 | Member correction/withdrawal route plus audited officer record amendment. |
+| FR-028 | P0 | Backups, reconciliation, documented restore and manual fallback. |
+| FR-029 | P2 | AI suggests schedules/draft messages only after schema & policy validation. |
+| FR-030 | P0 | Entire deterministic VPE workflow operates with AI disabled. |
+
+## C. Knowledge and communications (deferred until approvals)
+| ID | Priority | Requirement and acceptance criterion |
+|---|---|---|
+| KNOW-001 | P2 | Answer club questions only using approved, versioned club-owned source documents and links to public TMI pages. Include source attribution and document freshness. |
+| KNOW-002 | P0 | Do not copy, rehost, index protected TMI manuals, copyrighted educational PDFs or Base Camp/member-only content without written permission. No scraping or assumed portal API. |
+| KNOW-003 | P2 | Enforce permission-filtered retrieval and prompt-injection defenses; no ExCom-only report leaks to members/guests. |
+| KNOW-004 | P2 | Member WhatsApp history requires lawful consent and officer-curated redaction; raw bulk group ingestion disabled by default. |
+| KNOW-005 | P2 | Chatbot discloses AI nature, uncertainty and source; sends ambiguous official-policy questions to official TMI link or officer. |
+| MSG-001 | P0 | Email reminders/invitations only after officer-approved policy; clear opt-out for optional announcements. |
+| MSG-002 | P2 | WhatsApp 1:1 via official Meta Cloud API only, if eligibility, lawful consent, opt-in, templates/webhook verification and budget gate pass. |
+| MSG-003 | P0 | Existing club WhatsApp group is NOT assumed automatable through official APIs; no unofficial browser session bot. |
+| MSG-004 | P2 | Chatbot/WhatsApp cannot modify official membership or confirm a role except through authenticated validated workflows. |
+| MSG-005 | P2 | “Dropout risk” is a neutral private review signal based on objective and limited metrics, not a public label, automated expulsion or pressure campaign. |
+
+## D. TMI brand, intellectual property and club governance
+| ID | Priority | Requirement and acceptance criterion |
+|---|---|---|
+| TMI-001 | P0 | Club President/ExCom approves and owns the portal; no personal officer microsite; clarify nonstandard portal/branding with brand@toastmasters.org before public launch. |
+| TMI-002 | P0 | Use current official Brand Manual colors, logo spacing, typography and voice; obtain logo from authorized Brand Portal only; never invent club logo/tagline or alter TMI marks. |
+| TMI-003 | P0 | Display required Toastmasters website disclaimer/IP ownership language in published club site footer per Protocol 4.0; verify exact current text with Brand Team. |
+| TMI-004 | P0 | Public club page displays club name, meeting schedule/location/contact, mission, link to District and official toastmasters.org as source of meeting details. |
+| TMI-005 | P0 | No rehosting protected TMI materials; link publicly accessible official resources only within allowed conditions. |
+| TMI-006 | P0 | No official TMI data sync, impersonation, endorsement or data export without verified access/permission; show “club maintained / not official TMI record”. |
+| TMI-007 | P0 | AI never generates, recreates, modifies or uploads TMI trademarked logos; any official marks added as approved static assets by non-AI design process. |
+| TMI-008 | P1 | Published AI-generated media uses approved rights/permissions, review and disclosure as required by current TMI policy. |
+| TMI-009 | P0 | No paid/commercial exploitation, member solicitation or non-Toastmasters content; compensated maintenance and sponsorship require club/TMI policy review. |
+| TMI-010 | P1 | Source register: regulation version/URL, review date, responsible reviewer, approval evidence and compliance exceptions. |
+
+## E. Privacy, cost, maintenance and self-healing
+| ID | Priority | Requirement and acceptance criterion |
+|---|---|---|
+| GOV-001 | P0 | Record member consent/purpose for profile, attendance, education progress, awards, photos, AI processing, notification channels; allow changes and deletion requests consistent with law. |
+| GOV-002 | P0 | Define per-entity retention schedules, backup retention, access request and deletion workflow prior to live imports. |
+| GOV-003 | P0 | Never expose private contact details, attendance or individual progress publicly; aggregate stats may suppress small groups to prevent re-identification. |
+| GOV-004 | P0 | Retain sensitive private member records in restricted stores; keep public GitHub free of credentials, private documents and member lists. |
+| GOV-005 | P0 | Officer tenure-based permission revocation and annual/term handover; club retains access/ownership after volunteer departure. |
+| GOV-006 | P0 | Set monthly spend ceiling, provider quotas and budget alerts; optional AI/WhatsApp disabled at launch, pay-as-you-go requires officer authorization. |
+| GOV-007 | P0 | Restore and manual meeting-operation drill required; error notification goes to current authorized owner. |
+| GOV-008 | P2 | Bounded operational auto-retry (idempotent only), health monitoring and fallback; reconcile ambiguous sends rather than duplicate. |
+| GOV-009 | P2 | Self-modifying feature requests produce a reviewable branch/PR with cost/privacy/brand impact and tests; never autonomous deployment. |
+| GOV-010 | P0 | Minimum-data collection, no indiscriminate WhatsApp history mining, no automated profiling-based punishment or member ranking. |
 
 ## Nonfunctional requirements
-| ID | Requirement / test gate |
-|---|---|
-| NFR-001 | Authentication: verified account identity for member actions. |
-| NFR-002 | Authorization: least-privilege controls for officer-only edits. |
-| NFR-003 | Privacy: minimize PII, require consent and enforce agreed retention policy. |
-| NFR-004 | Secrets never stored in repo, Sheets or client responses. |
-| NFR-005 | Audit: append durable timestamp, actor, reason, entity, version and old/new state. |
-| NFR-006 | Concurrency: no lost updates under simultaneous submit/trigger execution. |
-| NFR-007 | Idempotency: repeated trigger event never creates a duplicate active invitation. |
-| NFR-008 | Recovery: ambiguous send outcomes flagged, not silently retried. |
-| NFR-009 | Backup and restoration drill required before pilot release. |
-| NFR-010 | Graceful degradation: manual agenda process available if script/API fails. |
-| NFR-011 | Observability: daily job heartbeat, failure notifications and basic event counts. |
-| NFR-012 | Timezone: DST-safe clock representation; AATC display in Asia/Kolkata. |
-| NFR-013 | Availability: target to be set after pilot; never promise cloud SLA beyond Google's services. |
-| NFR-014 | Performance: 40 members / four weeks / 15 role slots per meeting without Apps Script timeout in a representative test. |
-| NFR-015 | Maintainability: independent domain rules, adapter tests, readable docs and reproducible scripts. |
-| NFR-016 | AI safety: advisory-only, structured JSON, untrusted input treated as data, fallback on failure. |
+NFR-001 verified identity; NFR-002 server-side least-privilege RBAC; NFR-003 consent/data minimization; NFR-004 secrets absent from repo; NFR-005 durable audit trail; NFR-006 optimistic concurrency and lock; NFR-007 idempotent triggers; NFR-008 ambiguous-email reconciliation; NFR-009 backup restore drill; NFR-010 manual fallback; NFR-011 error/heartbeat monitoring; NFR-012 timezone Asia/Kolkata; NFR-013 pilot-based service reliability baseline; NFR-014 representative 40-member performance tests; NFR-015 modular maintainability and documentation; NFR-016 schema-validated advisory AI, fail-closed.
 
-## Assignment state machine
-PROPOSED → INVITED → CONFIRMED / DECLINED / EXPIRED; CONFIRMED → CANCELLED or COMPLETED (after meeting); replaced slot gets a NEW assignment ID. Do not mark EXPIRED until cutoff. Never convert silence to CONFIRMED.
+## State rules
+PROPOSED -> INVITED -> CONFIRMED / DECLINED / EXPIRED; CONFIRMED -> CANCELLED or COMPLETED; any replacement creates a new assignment ID and records a reason. Member response alone cannot bypass officer publication and role eligibility.
 
-## Initial assumptions requiring club signoff
-Exact weekly role counts, member eligibility/skills, deadlines, officer authority, data retention, consent text, backup schedule, no-show policy, and manual fallback protocol are TBD.
+## Release gate
+No real member data or public website until P0 privacy, club governance, branding clarification, security, identity and restoration gates are approved. P2 AI/WhatsApp/self-modification are excluded from the VPE MVP and require explicit separate review.

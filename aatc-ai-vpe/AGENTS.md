@@ -1,39 +1,20 @@
-# Codex instructions — AATC AI-VPE
+# Codex development rules — AATC AI Club Portal
+Read in order: DEVELOPMENT_PLAN.md, docs/SRS.md, docs/TMI_COMPLIANCE.md, docs/TEST_STRATEGY.md, docs/ARCHITECTURE.md, docs/DECISIONS.md.
 
-You are implementing a volunteer club scheduling system, NOT an autonomous people manager.
+## Product
+ONE club-owned responsive portal. RBAC for authenticated MEMBER and EXCOM plus delegated admin; VPE scheduling first. Other officer/AI/chat/WhatsApp modules are future features, not separate sites. This is NOT an official TMI service; never claim affiliation beyond club identity.
 
-## Mandatory reading order
-1. DEVELOPMENT_PLAN.md
-2. docs/SRS.md
-3. docs/TEST_STRATEGY.md
-4. docs/ARCHITECTURE.md
+## Do not violate
+- No private member data, TMI proprietary educational text/PDFs, logo assets or secrets in this public repository or model prompts. Link public TMI materials; do not scrape protected portals.
+- Before public deployment, enforce current Brand Manual, Protocol 4.0 and approved footer; request Brand Team guidance for custom site as needed.
+- Never produce a custom club emblem or tagline; never generate/alter TMI logo with AI or upload official logo to AI tools.
+- Server-side authentication/authorization and row/document access controls are mandatory; UI-only visibility is insufficient.
+- A member's explicit identity-verified acceptance alone confirms a role; no silence-as-consent or automatic confirmed swaps.
+- AI can recommend, summarize and draft only; cannot mutate authoritative records or deploy code.
+- WhatsApp Cloud API only with lawful permission, official API eligibility, opted-in recipients, approved templates, webhook security, and cost caps. No unofficial group bots.
+- Operational auto-recovery is bounded and audited; all changes to features, access or deployments require a human-reviewed GitHub PR and authorization.
+- Do not commit real .env, service credentials or live data. Use synthetic unit-test fixtures.
+- Keep source modular, choose low-cost maintainable services, track spend and avoid unnecessary dependencies.
 
-## Working practice
-- Make one small, reviewable change at a time; work on feature branches, do not push to main.
-- Never declare a stage DONE without passing tests and documenting evidence.
-- For each change identify SRS requirement IDs and add tests. Prefer pure JavaScript business rules; keep Google services behind adapters.
-- Run `npm test` and `npm run lint` before claiming success.
-- Ask for policy decisions only if genuinely blocked; use dummy data and safe defaults for exploratory work.
-- Preserve existing files, never delete or replace unrelated project content.
-- Update DEVELOPMENT_PLAN.md at the end of each coding session.
-
-## Non-negotiable invariants
-- Silence is never acceptance. Only a verified member's explicit response can confirm.
-- No AI response may create or update confirmed assignments, send email or bypass business constraints.
-- Do not reassign confirmed members silently.
-- All state changes are validated, version-checked and audit-logged.
-- Do not blindly retry ambiguous email deliveries; reconcile.
-- No real member names, email addresses, tokens or sensitive club data in code, logs, screenshots or GitHub.
-- Use mocked adapters for tests; never call live services from unit tests.
-- All outgoing messages require officer approval until explicitly authorized by policy.
-- Production deployments require separate manual approval.
-
-## Skills (read the appropriate guide)
-- .agents/skills/srs-traceability/SKILL.md
-- .agents/skills/apps-script-workflow/SKILL.md
-- .agents/skills/reliability-vv/SKILL.md
-
-## Technical conventions
-TypeScript can be considered later; MVP starts with testable ES modules and clasp-compatible Apps Script adapters.
-Treat sheets as non-transactional storage. Use Locks, version checks, event IDs and reconciliation.
-For any security-sensitive feature, include abuse-case tests.
+## Engineering workflow
+Small branch/PR per feature. Link SRS IDs to tests in docs/TRACEABILITY.md. Run npm run check and security/privacy checks before claiming complete. Keep adapters isolated, domain logic deterministic, with timestamps and idempotency/locking. Update DEVELOPMENT_PLAN.md after each session. Avoid modifying unrelated repository files.

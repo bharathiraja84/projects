@@ -1,32 +1,24 @@
-# AATC AI-VPE Scheduling & Confirmation Assistant
+# AATC AI Club Portal — VPE First
 
-A validation-first, human-in-the-loop tool for Ambattur Achievers Toastmasters Club's Sunday 10:00–12:00 IST meetings.
+**Status:** Specification and test scaffold only; no production accounts or member data connected.
 
-**Status:** Project scaffold only. No live Google Forms, Sheets, emails, AI calls or deployments are configured.
+This is one **club-owned, modular** portal for Ambattur Achievers Toastmasters Club (AATC). It supports members and the Executive Committee with role-based views. The first operational feature is the VPE four-week scheduling and explicit confirmation assistant. Future modules can support other ExCom roles, awards, events, approved knowledge Q&A, and consent-based one-to-one notifications.
 
-## Goals
-- Four-week rolling meeting schedule
-- Fair, eligibility-aware role recommendations
-- Explicit member accept/decline/cancel tracking
-- Reminder and escalation workflows
-- VPE approval of invitations and agenda
-- Auditability, privacy and manual fallback
+**Goals:** solve recurring club work; secure and low-cost by default; easy officer handover; avoid false commitments; protect member data and Toastmasters intellectual property.
 
-## Architecture
-Google Forms → Apps Script validation/workflows → Google Sheets (operational source of truth); MailApp for email; optional AI advisory layer that cannot edit state. `clasp` syncs Apps Script source from VS Code.
+## Read first
+- [DEVELOPMENT_PLAN.md](DEVELOPMENT_PLAN.md)
+- [AGENTS.md](AGENTS.md)
+- [SRS](docs/SRS.md) and [Test Strategy](docs/TEST_STRATEGY.md)
+- [Architecture](docs/ARCHITECTURE.md), [Data Model](docs/DATA_MODEL.md)
+- [TMI Policy & Brand Compliance](docs/TMI_COMPLIANCE.md)
+- [Cost & Operations](docs/COST_OPERATIONS.md)
 
-## Start here
-1. Read [DEVELOPMENT_PLAN.md](DEVELOPMENT_PLAN.md) and [AGENTS.md](AGENTS.md).
-2. Install Node.js LTS, Git, VS Code and Codex.
-3. From this folder run `npm install`, `npm test`, `npm run lint`.
-4. Copy `.env.example` to `.env` for *local non-secret* configuration, then add real credentials only via secure local/runtime settings.
-5. Review [SRS](docs/SRS.md) and [test strategy](docs/TEST_STRATEGY.md).
-6. Only after creating an isolated test Google account, spreadsheet and forms, configure `clasp login` and `clasp create` / `clasp clone` as documented in [deployment guide](docs/DEPLOYMENT.md).
+## Architecture decision
+Use **VS Code + Codex + GitHub** to develop. Long-term architecture: one responsive portal with server-side RBAC, a managed/authenticated backend, and a modular database, with optional Google Forms/Sheets/Apps Script adapters for the first VPE workflows. Candidate managed services (Firebase Auth/Firestore/Cloud Run) are **not yet approved** and require cost/privacy assessment before production. Apps Script remains useful but will not be the only long-term authorization layer.
 
-**Never run live scripts or email real members until validation and VPE approval.**
+## Safety and compliance
+This public GitHub repo contains NO member personal information, live tokens, Toastmasters logos, copyrighted educational content, or private member-only materials. The official logo must be sourced separately from the official Brand Portal and used only according to current rules. The club President/ExCom must approve the portal and clarify website/branding permissions with Toastmasters Brand Team before public launch. This portal is not an official Toastmasters International system and must not imply endorsement.
 
-## Design conventions
-- All identifiers and datetimes stored as UTC ISO 8601; club UI uses Asia/Kolkata.
-- Business rules are deterministic, independently unit tested.
-- No member PII, credentials, or live .clasp.json committed.
-- GitHub issues and DEVELOPMENT_PLAN.md document progress.
+## Local checks
+From this directory: `npm install`, `npm run check`. Existing pure-JS tests are foundational scaffolding only. No deployed feature is implemented yet.
