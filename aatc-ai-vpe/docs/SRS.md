@@ -58,9 +58,9 @@ P0 = mandatory before pilot/public release; P1 = before first member portal rele
 ## C. Knowledge and communications (deferred until approvals)
 | ID | Priority | Requirement and acceptance criterion |
 |---|---|---|
-| KNOW-001 | P2 | Answer club questions only using approved, versioned club-owned source documents and links to public TMI pages. Include source attribution and document freshness. |
-| KNOW-002 | P0 | Do not copy, rehost, index protected TMI manuals, copyrighted educational PDFs or Base Camp/member-only content without written permission. No scraping or assumed portal API. |
-| KNOW-003 | P2 | Enforce permission-filtered retrieval and prompt-injection defenses; no ExCom-only report leaks to members/guests. |
+| KNOW-001 | P2 | Answer club questions only using approved, explicitly nonconfidential club-authored FAQ records and links to public TMI pages. Include source attribution and document freshness. |
+| KNOW-002 | P0 | Never send Toastmasters internal communications, confidential Secretary reports, financial data, membership records, or protected materials to external AI services, even if accessible to ExCom. Do not copy, rehost, index protected TMI manuals, copyrighted educational PDFs or Base Camp/member-only content without written permission. No scraping or assumed portal API. |
+| KNOW-003 | P2 | Retrieve only nonconfidential and authorized FAQ entries; enforce permission-filtered retrieval and prompt-injection defenses; no ExCom-only report leaks to members/guests. |
 | KNOW-004 | P2 | Member WhatsApp history requires lawful consent and officer-curated redaction; raw bulk group ingestion disabled by default. |
 | KNOW-005 | P2 | Chatbot discloses AI nature, uncertainty and source; sends ambiguous official-policy questions to official TMI link or officer. |
 | MSG-001 | P0 | Email reminders/invitations only after officer-approved policy; clear opt-out for optional announcements. |
